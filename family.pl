@@ -105,3 +105,35 @@ wife(X):-
     parent(Y, Z), 
     woman(Y),
     print(Y), !.
+
+% 3
+% Является ли X дедушкой Y
+grand_pa(X, Y) :-
+    man(X),
+    child(X, P),
+    child(P, Y).
+
+% Вывод дедушек X
+grand_pas(X) :-
+    grand_pa(Y, X),
+    print(Y), nl, fail.
+
+% Являются ли X и Y бабушкой и внуком и наоборот
+grand_ma_and_son(X, Y) :-
+    woman(X), man(Y),
+    parent(X, P), parent(P, Y).
+
+grand_ma_and_son(X, Y) :-
+    woman(Y), man(X),
+    parent(Y, P), parent(P, X).
+
+% Является ли X племянником Y
+plemyannik(X, Y) :-
+    man(X),
+    parent(P, X),
+    b_s(P, Y).
+
+% Вывод всех племянников X
+plemyanniki(X) :-
+    plemyannik(Y, X),
+    print(Y), nl, fail.
