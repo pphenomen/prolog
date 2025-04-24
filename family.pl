@@ -80,3 +80,28 @@ b_s(X,Y):-
     parent(Mother, X), woman(Mother),
     parent(Father, Y),
     parent(Mother, Y).
+
+% 2 
+% Является ли X дочерью Y
+daughter(X, Y) :- woman(X), parent(Y, X).
+
+% Вывод дочери X
+daughter(X):-
+    parent(X, Y), 
+    woman(Y), 
+    write(Y), nl, 
+    fail.
+
+% Является ли X женой Y
+wife(X,Y):-
+    woman(X),
+    man(Y),
+    parent(X, Z),
+    parent(Y, Z).
+
+% Вывод жены X
+wife(X):-
+    parent(X, Z), 
+    parent(Y, Z), 
+    woman(Y),
+    print(Y), !.
