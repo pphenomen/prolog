@@ -13,7 +13,7 @@ max3(X,Y,Z,X) :- X>Y, X>Z, !.
 max3(_,Y,Z,Y) :- Y>Z, !.
 max3(_,_,Z,Z).
 
-% fact_up(+N, ?Res)
+% fact_up(+N, -Res)
 fact_up(0, 1) :- !.
 fact_up(N, Res) :- 
 	PrevN is N-1, 
@@ -28,7 +28,7 @@ fact_down(N, Acc, Res) :-
 
 fact_down(N, Res) :- fact_down(N, 1, Res).
 
-% sum_digits_up(+N, ?Sum)
+% sum_digits_up(+N, -Sum)
 sum_digits_up(0, 0) :- !.
 sum_digits_up(N, Sum) :- 
     Digit is N mod 10,
@@ -36,7 +36,7 @@ sum_digits_up(N, Sum) :-
     sum_digits_up(Rest, CurSum),
     Sum is CurSum + Digit.
 
-% sum_digits_down(+N, ?Sum)
+% sum_digits_down(+N, -Sum)
 sum_digits_down(0, CurSum, CurSum) :- !.
 sum_digits_down(N, CurSum, Sum) :-
     Digit is N mod 10,
@@ -96,3 +96,49 @@ rm_elements_with_sum_digits([H|T], Sum, Res) :-
     rm_elements_with_sum_digits(T, Sum, Res).
 rm_elements_with_sum_digits([H|T], Sum, [H|ResTail]) :-
     rm_elements_with_sum_digits(T, Sum, ResTail).
+
+% 2
+% Найти минимальную цифру числа
+% min(+X, +Y, -Min)
+min(X, Y, X) :- X < Y, !.
+min(_, Y, Y).
+
+% min_digit_up(+N, -MinDigit)
+min_digit_up(N, N) :- N < 10, !.
+min_digit_up(N, MinDigit) :-
+    Digit is N mod 10,
+    Rest is N div 10,
+    min_digit_up(Rest, TempMin),
+    min(Digit, TempMin, MinDigit).
+
+% min_digit_down(+N, -MinDigit)
+min_digit_down(N, MinDigit) :- min_digit_down(N, 9, MinDigit).
+
+min_digit_down(0, Acc, Acc) :- !.
+min_digit_down(N, Acc, MinDigit) :-
+    Digit is N mod 10,
+    Rest is N div 10,
+    min(Digit, Acc, NewAcc),
+    min_digit_down(Rest, NewAcc, MinDigit).
+
+% Найти произведение цифр числа, не делящихся на 5
+% mult_digits_not_div5_up(+N, -Mult)
+mult_digits_not_div5_up(N, 1) :- N =:= 0, !.
+mult_digits_not_div5_up(N, Mult) :- 
+    Digit is N mod 10,
+    Rest is N div 10,
+    Digit mod 5 =:= 0, !,
+    mult_digits_not_div5_up(Rest, Mult).
+mult_digits_not_div5_up(N, Mult) :-
+    Digit is N mod 10,
+    Rest is N div 10,
+    mult_digits_not_div5_up(Rest, RestMult),
+    Mult is RestMult * Digit.
+
+% Найти НОД двух чисел
+% gcd(+A, +B, -Res)
+gcd(A, 0, A) :- A =\= 0, !.
+gcd(_,0,_) :- !, fail.
+gcd(A, B, Res) :-
+    Ost is A mod B,
+    gcd(B, Ost, Res). 
