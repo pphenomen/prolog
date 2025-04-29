@@ -142,3 +142,53 @@ gcd(_,0,_) :- !, fail.
 gcd(A, B, Res) :-
     Ost is A mod B,
     gcd(B, Ost, Res). 
+
+% 3 
+% Найти элементы, расположенные перед последним минимальным
+% before_last_min(+List, -BeforeMin)
+before_last_min(List, Res) :-
+    last_min_index(List, Index),
+    elements_before_index(List, Index, Res).
+
+% last_min_index(+List, -Index)
+last_min_index(List, Index) :-
+    min_list(List, Min),
+    findall(I, nth0(I, List, Min), Indices),
+    last(Indices, Index).
+
+% elements_before_index(+List, +Index, -BeforeMin)
+elements_before_index(List, Index, BeforeMin) :-
+    length(BeforeMin, Index),
+    append(BeforeMin, _, List).
+
+% Найти элементы, расположенные после первого максимального.
+% after_first_max(+List, -AfterMax)
+after_first_max(List, Res) :-
+    first_max_index(List, Index),
+    elements_after_index(List, Index, Res).
+
+% first_max_index(+List, -Index)
+first_max_index(List, Index) :-
+    max_list(List, Max),
+    nth0(Index, List, Max), !.
+
+% elements_after_index(+List, +Index, -AfterMax)
+elements_after_index(List, Index, AfterMax) :-
+    AfterMaxInd is Index + 1,
+    length(TempList, AfterMaxInd),
+    append(TempList, AfterMax, List).
+
+% Проверить, чередуются ли положительные и отрицательные числа
+% is_alternate_pos_neg(+List)
+is_alternate_pos_neg(List) :- alternate(List), !.
+alternate([]).
+alternate([_]).
+alternate([A,B|T]) :-
+    (A > 0, B < 0 ; A < 0, B > 0),
+    alternate([B|T]).
+
+main :-
+    write("Count elements: "), nl, read(N),
+    write("Enter elements: "), nl, read_list(List, N),
+    after_first_max(List, Res),
+    write("Res: "), nl, write(Res).
